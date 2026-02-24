@@ -1,0 +1,21 @@
+{
+	"name": "com.tezemi.zeropercentbuilder",
+	"version": "0.1.0",
+	"displayName": "Zero Percent Builder",
+	"description": "Build automation and pipelines for Unity.",
+	"unity": "2022.3",
+	"keywords": 
+	[
+		"build",
+		"automation",
+		"pipelines",
+        "steam",
+        "steamworks"
+	],
+	"author": 
+	{
+		"name": "Tezemi",
+		"email": "tezemi.mail@gmail.com",
+		"url": "https://github.com/tezemi"
+	}
+}

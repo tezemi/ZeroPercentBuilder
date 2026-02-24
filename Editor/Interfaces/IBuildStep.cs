@@ -1,0 +1,11 @@
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ZeroPercentBuilder.Interfaces
+{
+    public interface IBuildStep
+    {
+        Task ExecuteAsync();
+        void OnGUI();
+    }
+}
