@@ -7,14 +7,15 @@ using ZeroPercentBuilder.BuildSources;
 namespace ZeroPercentBuilder.BuildSteps
 {
     [Serializable]
-    public class BuildFromConfigStep : IBuildStep
-    {        
+    public class BuildConfigStep : IBuildStep
+    {
+        public string ArtifactId;
         public BuildConfig BuildConfig;
-        public string BuildArtifactID;
 
-        public async Task ExecuteAsync()
+        public async Task ExecuteAsync(Pipeline pipeline)
         {
-            
+            BuildArtifact buildArtifact = await BuildConfig.AcquireAsync(ArtifactId, CancellationToken.None);
+            pipeline.StoreBuildArtifact(buildArtifact);
         }
 
         public void OnGUI()

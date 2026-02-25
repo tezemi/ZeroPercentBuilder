@@ -5,7 +5,7 @@ namespace ZeroPercentBuilder.Interfaces
 {
     public interface IBuildStep
     {
-        Task ExecuteAsync();
+        Task ExecuteAsync(Pipeline pipeline);
         void OnGUI();
     }
 }

@@ -1,8 +1,10 @@
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.Build.Reporting;
 using ZeroPercentBuilder;
 using ZeroPercentBuilder.Interfaces;
 
@@ -24,12 +26,17 @@ namespace ZeroPercentBuilder.BuildSources
             return true;
         }
 
-        public async Task<BuildArtifact> AcquireAsync(CancellationToken cancellationToken)
+        public async Task<BuildArtifact> AcquireAsync(string artifactId, CancellationToken cancellationToken)
         {
             string tempDirectory = FileUtil.GetUniqueTempPathInProject();
             BuildPipeline.BuildPlayer(Scenes, $"{tempDirectory}/{ProgramName}", BuildTarget, BuildOptions);
 
-            return new BuildArtifact(tempDirectory, Directory.GetFiles(tempDirectory, "*.*", SearchOption.AllDirectories));
+            return new BuildArtifact
+            {
+                ID = artifactId,
+                RootPath = tempDirectory,
+                Files = Directory.GetFiles(tempDirectory, "*.*", SearchOption.AllDirectories),
+            };
         }
     }
 }
