@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ZeroPercentBuilder.Interfaces;
 using ZeroPercentBuilder.BuildSources;
-using UnityEngine;
+using ZeroPercentBuilder.Attributes;
 using UnityEditor;
 
 namespace ZeroPercentBuilder.BuildSteps
@@ -17,8 +17,12 @@ namespace ZeroPercentBuilder.BuildSteps
 
         public async Task ExecuteAsync(Pipeline pipeline)
         {
+            pipeline.Logger.Log($"Creating build artifact for {BuildConfig.name}");
+
             BuildArtifact buildArtifact = await BuildConfig.AcquireAsync(ArtifactID, CancellationToken.None);
             pipeline.StoreBuildArtifact(buildArtifact);
+
+            pipeline.Logger.Log($"Stored build artifact with ID {ArtifactID}.");
         }
 
         public void OnGUI()

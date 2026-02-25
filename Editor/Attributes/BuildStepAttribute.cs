@@ -1,12 +1,15 @@
 using System;
 
-[AttributeUsage(AttributeTargets.Class)]
-public class BuildStepAttribute : Attribute
+namespace ZeroPercentBuilder.Attributes
 {
-    public string BuildStepName { get; set; }
-
-    public BuildStepAttribute(string buildStepName)
+    [AttributeUsage(AttributeTargets.Class)]
+    public class BuildStepAttribute : Attribute
     {
-        BuildStepName = buildStepName;
+        public string BuildStepName { get; set; }
+
+        public BuildStepAttribute(string buildStepName)
+        {
+            BuildStepName = buildStepName;
+        }
     }
 }

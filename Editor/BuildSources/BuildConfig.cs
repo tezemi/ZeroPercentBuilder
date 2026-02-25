@@ -1,11 +1,8 @@
-using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEditor;
-using UnityEditor.Build.Reporting;
-using ZeroPercentBuilder;
 using ZeroPercentBuilder.Interfaces;
 
 namespace ZeroPercentBuilder.BuildSources

@@ -17,9 +17,13 @@ namespace ZeroPercentBuilder.CustomEditors
         {
             Pipeline pipeline = (Pipeline)target;
             
-            //DrawDefaultInspector();
-
             EditorGUILayout.LabelField(pipeline.name, EditorStyles.boldLabel);
+
+            pipeline.LogToFile = EditorGUILayout.Toggle("Log to File", pipeline.LogToFile);
+            if (pipeline.LogToFile)
+            {
+                pipeline.LogFileDirectory = EditorGUIUtilities.FolderPicker("Log Directory", pipeline.LogFileDirectory, d => pipeline.LogFileDirectory = d);
+            }
 
             if (pipeline.BuildSteps != null)
             {
@@ -74,9 +78,9 @@ namespace ZeroPercentBuilder.CustomEditors
                 menu.ShowAsContext();
             }
             
-            if (GUILayout.Button("Build"))
+            if (GUILayout.Button("Run Pipeline"))
             {
-                pipeline.Build();
+                pipeline.Run();
             }
         }
     }

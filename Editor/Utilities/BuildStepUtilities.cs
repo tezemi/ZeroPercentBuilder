@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using ZeroPercentBuilder.Interfaces;
+using ZeroPercentBuilder.Attributes;
 
 namespace ZeroPercentBuilder.Utilities
 {

@@ -7,6 +7,7 @@ using ZeroPercentBuilder.BuildSources;
 using UnityEngine;
 using UnityEditor;
 using ZeroPercentBuilder.Utilities;
+using ZeroPercentBuilder.Attributes;
 
 namespace ZeroPercentBuilder.BuildSteps
 {
@@ -19,12 +20,25 @@ namespace ZeroPercentBuilder.BuildSteps
 
         public async Task ExecuteAsync(Pipeline pipeline)
         {
+            pipeline.Logger.Log($"Saving build artifact with ID {ArtifactID} to {OutputDirectory}.");
+
             BuildArtifact buildArtifact = pipeline.GetBuildArtifact(ArtifactID);
             
             foreach (string filePath in buildArtifact.Files)
             {
-                File.Copy(filePath, Path.Combine(OutputDirectory, filePath.Replace(buildArtifact.RootPath, string.Empty)), true);
+                string relativePath = Path.GetRelativePath(buildArtifact.RootPath, filePath);
+                string output = Path.Combine(OutputDirectory, relativePath);
+
+                pipeline.Logger.Log($"Copying {filePath} to {output}.");
+
+                string directory = Path.GetDirectoryName(output);
+                if (!string.IsNullOrEmpty(directory))
+                    Directory.CreateDirectory(directory);
+
+                File.Copy(filePath, output, true);
             }
+
+            pipeline.Logger.Log($"Saved build artifact to {OutputDirectory} successfully.");
         }
 
         public void OnGUI()
