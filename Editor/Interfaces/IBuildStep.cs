@@ -7,5 +7,6 @@ namespace ZeroPercentBuilder.Interfaces
     {
         Task ExecuteAsync(Pipeline pipeline);
         void OnGUI();
+        IBuildStep Duplicate();
     }
 }
