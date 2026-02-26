@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using UnityEditor;
-using UnityEditor.Build.Reporting;
 using UnityEngine;
-using ZeroPercentBuilder.BuildSteps;
-using ZeroPercentBuilder.Interfaces;
+using UnityEditor;
 using ZeroPercentBuilder.Utilities;
+using ZeroPercentBuilder.Interfaces;
 
 namespace ZeroPercentBuilder.CustomEditors
 {
@@ -16,14 +14,20 @@ namespace ZeroPercentBuilder.CustomEditors
         public override void OnInspectorGUI()
         {
             Pipeline pipeline = (Pipeline)target;
+
+            EditorGUI.BeginChangeCheck();
             
             EditorGUILayout.LabelField(pipeline.name, EditorStyles.boldLabel);
+
+            EditorGUILayout.Space();
 
             pipeline.LogToFile = EditorGUILayout.Toggle("Log to File", pipeline.LogToFile);
             if (pipeline.LogToFile)
             {
                 pipeline.LogFileDirectory = EditorGUIUtilities.FolderPicker("Log Directory", pipeline.LogFileDirectory, d => pipeline.LogFileDirectory = d);
             }
+
+            EditorGUILayout.Space();
 
             if (pipeline.BuildSteps != null)
             {
@@ -77,10 +81,26 @@ namespace ZeroPercentBuilder.CustomEditors
 
                 menu.ShowAsContext();
             }
+
+            EditorGUILayout.Space();
             
             if (GUILayout.Button("Run Pipeline"))
             {
-                pipeline.Run();
+                bool run = EditorUtility.DisplayDialog
+                (
+                    "Run Pipeline",
+                    "Are you sure you want to run the pipeline? Once started it cannot be stopped.",
+                    "Run",
+                    "Cancel"
+                );
+
+                if (run)
+                    pipeline.Run();
+            }
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                EditorUtility.SetDirty(target);
             }
         }
     }

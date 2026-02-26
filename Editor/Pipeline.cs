@@ -87,10 +87,23 @@ namespace ZeroPercentBuilder
             if (completedWithErrors)
             {
                 Logger.LogWarning($"Pipeline completed with errors.");
+                EditorUtility.DisplayDialog
+                (
+                    "Pipeline Failed",
+                    "Pipeline finished running with errors. Check logs for details.",
+                    "OK"
+                );
             }
             else
             {
                 Logger.Log($"Pipeline completed successfully.");
+
+                EditorUtility.DisplayDialog
+                (
+                    "Pipeline Completed",
+                    "Pipeline finished successfully.",
+                    "OK"
+                );
             }            
         }
 

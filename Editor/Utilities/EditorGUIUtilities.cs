@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -14,6 +15,9 @@ namespace ZeroPercentBuilder.Utilities
         {
             fontStyle = FontStyle.Italic
         };
+
+        private static readonly string[] _architectureOptions = { "x86", "x86_64", "ARM64" };
+        private static readonly int[] _architectureValues = { 0, 1, 2 };
         
         public static string FolderPicker(string label, string current, Action<string> onSelected)
         {            
@@ -60,6 +64,36 @@ namespace ZeroPercentBuilder.Utilities
             return result;
         }
         
+        public static void StringArray(string label, ref string[] items)
+        {
+            EditorGUILayout.LabelField(label);
+
+            for (int i = 0; i < items.Length; i++)
+            {
+                EditorGUILayout.BeginHorizontal();
+
+                items[i] = EditorGUILayout.TextField(items[i]);
+                if (GUILayout.Button("-", GUILayout.Width(25f)))
+                    items = items.Where((_, index) => index != i).ToArray();
+
+                EditorGUILayout.EndHorizontal();
+            }
+
+            if (GUILayout.Button("+", GUILayout.Width(25f)))
+                items = items.Append(string.Empty).ToArray();
+        }
+
+        public static int ArchitecturePopup(string label, int currentArchitecture)
+        {
+            return EditorGUILayout.IntPopup
+            (
+                label,
+                currentArchitecture,
+                _architectureOptions,
+                _architectureValues
+            );
+        }
+
         public static string[] SceneList(string label, string[] scenes)
         {
             ReorderableList reorderableList = GetOrCreateList(label, new List<string>(scenes));

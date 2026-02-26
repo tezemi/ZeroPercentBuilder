@@ -1,7 +1,7 @@
-using UnityEditor;
 using UnityEngine;
-using ZeroPercentBuilder.BuildSources;
+using UnityEditor;
 using ZeroPercentBuilder.Utilities;
+using ZeroPercentBuilder.BuildSources;
 
 namespace ZeroPercentBuilder.CustomEditors
 {
@@ -12,14 +12,25 @@ namespace ZeroPercentBuilder.CustomEditors
         {
             BuildConfig buildConfig = (BuildConfig)target;
             
+            EditorGUI.BeginChangeCheck();
+
             buildConfig.ProductName = EditorGUIUtilities.TextFieldWithPlaceHolder("Product Name", buildConfig.ProductName, Application.productName);
             buildConfig.Version = EditorGUIUtilities.TextFieldWithPlaceHolder("Version", buildConfig.Version, Application.version);
             buildConfig.ProgramName = EditorGUIUtilities.TextFieldWithPlaceHolder("Program Name", buildConfig.ProgramName, BuildUtilities.GetExecutableName(Application.productName, buildConfig.BuildTarget));
             
+            EditorGUILayout.Space();
+
             buildConfig.BuildTarget = (BuildTarget)EditorGUILayout.EnumPopup("Build Target", buildConfig.BuildTarget);
-            
-            bool developmentBuild = EditorGUILayout.Toggle("Development Build", buildConfig.BuildOptions.HasFlag(BuildOptions.Development));
+            buildConfig.Architecture = EditorGUIUtilities.ArchitecturePopup("Architecture", buildConfig.Architecture);
+            buildConfig.ScriptingImplementation = (ScriptingImplementation)EditorGUILayout.EnumPopup("Scripting Implementation", buildConfig.ScriptingImplementation);
+            buildConfig.ManagedStrippingLevel = (ManagedStrippingLevel)EditorGUILayout.EnumPopup("Stripping Level", buildConfig.ManagedStrippingLevel);
+
+            EditorGUILayout.Space();
+
             bool allowDebugging;
+            bool deepProfiling;
+            bool autoConnectProfiler;
+            bool developmentBuild = EditorGUILayout.Toggle("Development Build", buildConfig.BuildOptions.HasFlag(BuildOptions.Development));
             
             using (new EditorGUI.DisabledScope(!developmentBuild))
             {
@@ -28,8 +39,20 @@ namespace ZeroPercentBuilder.CustomEditors
                 EditorGUI.indentLevel--;
             }
 
-            bool cleanBuild = EditorGUILayout.Toggle("Clean Build", buildConfig.BuildOptions.HasFlag(BuildOptions.CleanBuildCache));
-            
+            using (new EditorGUI.DisabledScope(!developmentBuild))
+            {
+                EditorGUI.indentLevel++;
+                deepProfiling = EditorGUILayout.Toggle("Deep Profiling", buildConfig.BuildOptions.HasFlag(BuildOptions.EnableDeepProfilingSupport));
+                EditorGUI.indentLevel--;
+            }
+
+            using (new EditorGUI.DisabledScope(!developmentBuild))
+            {
+                EditorGUI.indentLevel++;
+                autoConnectProfiler = EditorGUILayout.Toggle("Auto Connect Profiler", buildConfig.BuildOptions.HasFlag(BuildOptions.ConnectWithProfiler));
+                EditorGUI.indentLevel--;
+            }
+
             if (developmentBuild) 
                 buildConfig.BuildOptions |= BuildOptions.Development;
             else
@@ -39,13 +62,40 @@ namespace ZeroPercentBuilder.CustomEditors
                 buildConfig.BuildOptions |= BuildOptions.AllowDebugging;
             else
                 buildConfig.BuildOptions &= ~BuildOptions.AllowDebugging;
+
+            if (developmentBuild && deepProfiling)   
+                buildConfig.BuildOptions |= BuildOptions.EnableDeepProfilingSupport;
+            else
+                buildConfig.BuildOptions &= ~BuildOptions.EnableDeepProfilingSupport;
             
+            if (developmentBuild && autoConnectProfiler)   
+                buildConfig.BuildOptions |= BuildOptions.ConnectWithProfiler;
+            else
+                buildConfig.BuildOptions &= ~BuildOptions.ConnectWithProfiler;
+            
+
+            EditorGUILayout.Space();
+
+            bool cleanBuild = EditorGUILayout.Toggle("Clean Build", buildConfig.BuildOptions.HasFlag(BuildOptions.CleanBuildCache));
+
             if (cleanBuild)       
                 buildConfig.BuildOptions |= BuildOptions.CleanBuildCache;
             else
                 buildConfig.BuildOptions &= ~BuildOptions.CleanBuildCache;
             
+            EditorGUILayout.Space();
+            
             buildConfig.Scenes = EditorGUIUtilities.SceneList("Scenes", buildConfig.Scenes);
+
+            if (buildConfig.ScriptDefines == null)
+                buildConfig.ScriptDefines = new string[0];
+
+            EditorGUIUtilities.StringArray("Script Defines", ref buildConfig.ScriptDefines);
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                EditorUtility.SetDirty(target);
+            }
         }
     }
 }
