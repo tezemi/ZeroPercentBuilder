@@ -4,14 +4,15 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEditor;
 using ZeroPercentBuilder.Interfaces;
+using ZeroPercentBuilder.Utilities;
 
 namespace ZeroPercentBuilder.BuildSources
 {
     [CreateAssetMenu(fileName = "New" + nameof(BuildConfig), menuName = "Build/" + nameof(BuildConfig))]
     public class BuildConfig : ScriptableObject, IBuildSource
     {
-        public string ProductName;  // leave blank for default
-        public string Version;      // leave blank for default
+        public string ProductName;
+        public string Version;
         public string ProgramName;
         public string[] Scenes;
         public ScriptingImplementation ScriptingImplementation;
@@ -26,7 +27,16 @@ namespace ZeroPercentBuilder.BuildSources
         public async Task<BuildArtifact> AcquireAsync(string artifactId, CancellationToken cancellationToken)
         {
             string tempDirectory = FileUtil.GetUniqueTempPathInProject();
-            BuildPipeline.BuildPlayer(Scenes, $"{tempDirectory}/{ProgramName}", BuildTarget, BuildOptions);
+            
+            BuildPlayerOptions options = new BuildPlayerOptions
+            {
+                scenes = Scenes,
+                locationPathName = Path.Combine(tempDirectory, string.IsNullOrEmpty(ProgramName) ? BuildUtilities.GetExecutableName(ProductName, BuildTarget) : ProgramName),
+                target = BuildTarget,
+                options = BuildOptions
+            };
+            
+            BuildPipeline.BuildPlayer(options);
 
             return new BuildArtifact
             {
