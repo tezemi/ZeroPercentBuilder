@@ -13,8 +13,6 @@ namespace ZeroPercentBuilder
     [CreateAssetMenu(fileName = "New" + nameof(Pipeline), menuName = "Build/" + nameof(Pipeline))]
     public class Pipeline : ScriptableObject
     {
-        public bool LogToFile;
-        public string LogFileDirectory;
         [SerializeReference]
         public List<IBuildStep> BuildSteps;
         public IPipelineLogger Logger { get; set; }
@@ -28,9 +26,9 @@ namespace ZeroPercentBuilder
             // Add all loggers to the composite logger that have the logger attribute
             // If checked, add a file logger as well
             Logger = new CompositeLogger(LoggerUtilities.GetAllLoggers());
-            if (LogToFile)
+            if (!string.IsNullOrEmpty(PipelinePreferences.LogDirectory))
             {
-                ((CompositeLogger)Logger).AddLogger(new FileLogger(Path.Combine(LogFileDirectory, $"{name}_{DateTime.Now:yyyy-MM-dd_HH:mm:ss}_log.txt")));
+                ((CompositeLogger)Logger).AddLogger(new FileLogger(Path.Combine(PipelinePreferences.LogDirectory, $"{name}_{DateTime.Now:yyyy-MM-dd_HH:mm:ss}_log.txt")));
             }
             
             bool completedWithErrors = false;

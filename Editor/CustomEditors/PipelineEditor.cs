@@ -21,14 +21,6 @@ namespace ZeroPercentBuilder.CustomEditors
 
             EditorGUILayout.Space();
 
-            pipeline.LogToFile = EditorGUILayout.Toggle("Log to File", pipeline.LogToFile);
-            if (pipeline.LogToFile)
-            {
-                pipeline.LogFileDirectory = EditorGUIUtilities.FolderPicker("Log Directory", pipeline.LogFileDirectory, d => pipeline.LogFileDirectory = d);
-            }
-
-            EditorGUILayout.Space();
-
             if (pipeline.BuildSteps != null)
             {
                 for (int i = 0; i < pipeline.BuildSteps.Count; i++)

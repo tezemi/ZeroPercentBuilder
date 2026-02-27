@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Text;
-using ZeroPercentBuilder.Attributes;
 using ZeroPercentBuilder.Interfaces;
 
 namespace ZeroPercentBuilder.Loggers
