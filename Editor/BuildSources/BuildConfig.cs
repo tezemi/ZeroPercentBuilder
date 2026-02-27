@@ -52,13 +52,13 @@ namespace ZeroPercentBuilder.BuildSources
             {
                 PlayerSettings.SetArchitecture(namedTarget, Architecture);
                 PlayerSettings.SetScriptingBackend(namedTarget, ScriptingImplementation);
-                PlayerSettings.productName = ProductName;
+                PlayerSettings.productName = !string.IsNullOrEmpty(ProductName) ? ProductName : PlayerSettings.productName;
                 PlayerSettings.SetManagedStrippingLevel(namedTarget, ManagedStrippingLevel);
 
                 BuildPlayerOptions options = new BuildPlayerOptions
                 {
                     scenes = Scenes,
-                    locationPathName = Path.Combine(tempDirectory, string.IsNullOrEmpty(ProgramName) ? BuildUtilities.GetExecutableName(ProductName, BuildTarget) : ProgramName),
+                    locationPathName = Path.Combine(tempDirectory, string.IsNullOrEmpty(ProgramName) ? BuildUtilities.GetExecutableName(PlayerSettings.productName, BuildTarget) : ProgramName),
                     target = BuildTarget,
                     options = BuildOptions,
                     extraScriptingDefines = ScriptDefines
