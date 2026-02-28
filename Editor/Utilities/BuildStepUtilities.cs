@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using UnityEditor;
 using ZeroPercentBuilder.Interfaces;
 using ZeroPercentBuilder.Attributes;
@@ -28,7 +28,7 @@ namespace ZeroPercentBuilder.Utilities
         {
             return TypeCache
                 .GetTypesWithAttribute<BuildStepAttribute>()
-                .Select(t => GetBuildStepName(t));
+                .Select(GetBuildStepName);
         }
 
         public static IBuildStep CreateFromName(string name)

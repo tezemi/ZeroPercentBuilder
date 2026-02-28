@@ -17,7 +17,7 @@ namespace ZeroPercentBuilder.BuildSteps
         public string ArtifactID;
         public string OutputDirectory;
 
-        public async Task ExecuteAsync(Pipeline pipeline)
+        public Task ExecuteAsync(Pipeline pipeline)
         {
             BuildArtifact buildArtifact = pipeline.GetBuildArtifact(ArtifactID);
             
@@ -27,8 +27,11 @@ namespace ZeroPercentBuilder.BuildSteps
 
                 if (IsSafeBuildPath(OutputDirectory))
                 {
-                    Directory.Delete(OutputDirectory, true);
-                    Directory.CreateDirectory(OutputDirectory);
+                    if (Directory.Exists(OutputDirectory))
+                        Directory.Delete(OutputDirectory, true);
+                    
+                    if (!Directory.Exists(OutputDirectory))
+                        Directory.CreateDirectory(OutputDirectory);
                 }
                 else
                 {
@@ -53,6 +56,8 @@ namespace ZeroPercentBuilder.BuildSteps
             }
 
             pipeline.Logger.Log($"Saved build artifact to {OutputDirectory} successfully.");
+            
+            return Task.CompletedTask;
         }
 
         public void OnGUI()

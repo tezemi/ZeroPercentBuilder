@@ -16,8 +16,8 @@ namespace ZeroPercentBuilder.Utilities
             fontStyle = FontStyle.Italic
         };
 
-        private static readonly string[] _architectureOptions = { "x86", "x86_64", "ARM64" };
-        private static readonly int[] _architectureValues = { 0, 1, 2 };
+        private static readonly string[] ArchitectureOptions = { "x86", "x86_64", "ARM64" };
+        private static readonly int[] ArchitectureValues = { 0, 1, 2 };
         
         public static string FolderPicker(string label, string current, Action<string> onSelected)
         {            
@@ -32,6 +32,29 @@ namespace ZeroPercentBuilder.Utilities
                 EditorApplication.delayCall += () =>
                 {
                     var path = EditorUtility.OpenFolderPanel(label, captured, string.Empty);
+                    if (!string.IsNullOrEmpty(path))
+                        onSelected(path);
+                };
+            }
+
+            EditorGUILayout.EndHorizontal();
+
+            return output;
+        }
+        
+        public static string FilePicker(string label, string current, Action<string> onSelected)
+        {            
+            EditorGUILayout.BeginHorizontal();
+
+            string result = EditorGUILayout.TextField(label, current);
+            string output = result;
+            
+            if (GUILayout.Button("…", GUILayout.Width(30f)))
+            {
+                var captured = result;
+                EditorApplication.delayCall += () =>
+                {
+                    var path = EditorUtility.OpenFilePanel(label, captured, string.Empty);
                     if (!string.IsNullOrEmpty(path))
                         onSelected(path);
                 };
@@ -89,8 +112,8 @@ namespace ZeroPercentBuilder.Utilities
             (
                 label,
                 currentArchitecture,
-                _architectureOptions,
-                _architectureValues
+                ArchitectureOptions,
+                ArchitectureValues
             );
         }
 

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEditor;
 using ZeroPercentBuilder.Utilities;
@@ -88,7 +89,7 @@ namespace ZeroPercentBuilder.CustomEditors
             buildConfig.Scenes = EditorGUIUtilities.SceneList("Scenes", buildConfig.Scenes);
 
             if (buildConfig.ScriptDefines == null)
-                buildConfig.ScriptDefines = new string[0];
+                buildConfig.ScriptDefines = Array.Empty<string>();
 
             EditorGUIUtilities.StringArray("Script Defines", ref buildConfig.ScriptDefines);
 

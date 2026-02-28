@@ -5,7 +5,7 @@ namespace ZeroPercentBuilder.Attributes
     [AttributeUsage(AttributeTargets.Class)]
     public class BuildStepAttribute : Attribute
     {
-        public string BuildStepName { get; set; }
+        public string BuildStepName { get; }
 
         public BuildStepAttribute(string buildStepName)
         {

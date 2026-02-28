@@ -1,11 +1,10 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
-using ZeroPercentBuilder.Interfaces;
-using ZeroPercentBuilder.BuildSources;
-using ZeroPercentBuilder.Attributes;
-using UnityEditor;
 using ZeroPercentBuilder.Utilities;
+using ZeroPercentBuilder.Interfaces;
+using ZeroPercentBuilder.Attributes;
+using ZeroPercentBuilder.BuildSources;
+using UnityEditor;
 
 namespace ZeroPercentBuilder.BuildSteps
 {
@@ -23,7 +22,7 @@ namespace ZeroPercentBuilder.BuildSteps
             ExistingBuild existingBuild = new ExistingBuild();
             existingBuild.BuildDirectory = BuildDirectory;
 
-            BuildArtifact buildArtifact = await existingBuild.AcquireAsync(ArtifactID, CancellationToken.None);
+            BuildArtifact buildArtifact = await existingBuild.AcquireAsync(ArtifactID);
             pipeline.StoreBuildArtifact(buildArtifact);
 
             pipeline.Logger.Log($"Acquired build artifact '{ArtifactID}' from '{BuildDirectory}' successfully.");

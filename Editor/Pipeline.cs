@@ -14,7 +14,7 @@ namespace ZeroPercentBuilder
     public class Pipeline : ScriptableObject
     {
         [SerializeReference]
-        public List<IBuildStep> BuildSteps;
+        public List<IBuildStep> BuildSteps =  new ();
         public IPipelineLogger Logger { get; set; }
         public readonly List<BuildArtifact> Artifacts = new ();
 
@@ -65,15 +65,18 @@ namespace ZeroPercentBuilder
 
                 foreach (BuildArtifact buildArtifact in Artifacts)
                 {
-                    try
+                    if (buildArtifact.CleanAfterPipelineRan)
                     {
-                        Logger.Log($"Cleaing up artifact {buildArtifact.ID}.");
+                        try
+                        {
+                            Logger.Log($"Cleaing up artifact {buildArtifact.ID}.");
 
-                        buildArtifact.CleanUp();
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.LogError($"Failed to clean up build artifact:{Environment.NewLine}{e}");
+                            buildArtifact.CleanUp();
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.LogError($"Failed to clean up build artifact:{Environment.NewLine}{e}");
+                        }
                     }
                 }
 
@@ -84,7 +87,7 @@ namespace ZeroPercentBuilder
 
             if (completedWithErrors)
             {
-                Logger.LogWarning($"Pipeline completed with errors.");
+                Logger.LogWarning("Pipeline completed with errors.");
                 EditorUtility.DisplayDialog
                 (
                     "Pipeline Failed",
@@ -94,7 +97,7 @@ namespace ZeroPercentBuilder
             }
             else
             {
-                Logger.Log($"Pipeline completed successfully.");
+                Logger.Log("Pipeline completed successfully.");
 
                 EditorUtility.DisplayDialog
                 (

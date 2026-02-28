@@ -1,6 +1,6 @@
+using System;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEditor;
@@ -16,8 +16,8 @@ namespace ZeroPercentBuilder.BuildSources
         public string ProductName;
         public string Version;
         public string ProgramName;
-        public string[] Scenes = new string[0];
-        public string[] ScriptDefines = new string[0];
+        public string[] Scenes = Array.Empty<string>();
+        public string[] ScriptDefines = Array.Empty<string>();
         public int Architecture = 1;
         public ScriptingImplementation ScriptingImplementation = ScriptingImplementation.Mono2x;
         public ManagedStrippingLevel ManagedStrippingLevel = ManagedStrippingLevel.Low;
@@ -31,13 +31,8 @@ namespace ZeroPercentBuilder.BuildSources
                 .Select(s => s.path)
                 .ToArray();
         }
-
-        public bool IsValid()
-        {
-            return true;
-        }
-
-        public async Task<BuildArtifact> AcquireAsync(string artifactId, CancellationToken cancellationToken)
+        
+        public Task<BuildArtifact> AcquireAsync(string artifactId)
         {
             string tempDirectory = FileUtil.GetUniqueTempPathInProject();
             
@@ -66,12 +61,13 @@ namespace ZeroPercentBuilder.BuildSources
             
                 BuildPipeline.BuildPlayer(options);
 
-                return new BuildArtifact
+                return Task.FromResult(new BuildArtifact
                 {
+                    CleanAfterPipelineRan = true,
                     ID = artifactId,
                     RootPath = tempDirectory,
                     Files = Directory.GetFiles(tempDirectory, "*.*", SearchOption.AllDirectories),
-                };
+                });
             }
             finally
             {

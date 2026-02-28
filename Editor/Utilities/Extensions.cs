@@ -17,7 +17,7 @@ namespace ZeroPercentBuilder.Utilities
 
         public static void MoveToLast<T>(this List<T> list, T item)
         {
-int index = list.IndexOf(item);
+            int index = list.IndexOf(item);
 
             if (index >= list.Count - 1) 
                 return;

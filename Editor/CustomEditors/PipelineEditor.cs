@@ -27,10 +27,7 @@ namespace ZeroPercentBuilder.CustomEditors
                 {
                     IBuildStep step = pipeline.BuildSteps[i];
 
-                    if (!_foldouts.ContainsKey(step))
-                    {
-                        _foldouts[step] = false;
-                    }
+                    _foldouts.TryAdd(step, false);
 
                     EditorGUILayout.BeginHorizontal();
 

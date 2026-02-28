@@ -7,7 +7,7 @@ namespace ZeroPercentBuilder.Loggers
 {
     public class FileLogger : IPipelineLogger, IDisposable
     {
-        private StreamWriter _writer;
+        private readonly StreamWriter _writer;
 
         public void Log(string message) => WriteLine("DEBUG", message);
         public void LogWarning(string message) => WriteLine("WARN", message);
@@ -24,9 +24,8 @@ namespace ZeroPercentBuilder.Loggers
             (
                 new FileStream(file, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read),
                 Encoding.UTF8
-                
             );
-
+            
             _writer.AutoFlush = true;
         }
 
