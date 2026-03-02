@@ -42,6 +42,8 @@ namespace ZeroPercentBuilder.BuildSources
             ScriptingImplementation editorScriptingImplementation = PlayerSettings.GetScriptingBackend(namedTarget);
             string editorProductName = PlayerSettings.productName;
             ManagedStrippingLevel editorManagedStrippingLevel = PlayerSettings.GetManagedStrippingLevel(namedTarget);
+            string editorVersion = PlayerSettings.bundleVersion;
+            PlayerSettings.GetScriptingDefineSymbols(namedTarget, out string[] editorScriptDefines);
 
             try
             {
@@ -49,6 +51,11 @@ namespace ZeroPercentBuilder.BuildSources
                 PlayerSettings.SetScriptingBackend(namedTarget, ScriptingImplementation);
                 PlayerSettings.productName = !string.IsNullOrEmpty(ProductName) ? ProductName : PlayerSettings.productName;
                 PlayerSettings.SetManagedStrippingLevel(namedTarget, ManagedStrippingLevel);
+                PlayerSettings.bundleVersion = !string.IsNullOrEmpty(Version) ? Version : PlayerSettings.bundleVersion;
+                PlayerSettings.SetScriptingDefineSymbols(namedTarget, ScriptDefines);
+                
+                PipelineBuildContext.ActiveBuildTarget = namedTarget;
+                PipelineBuildContext.ActiveScriptingDefines = ScriptDefines; 
 
                 BuildPlayerOptions options = new BuildPlayerOptions
                 {
@@ -75,6 +82,14 @@ namespace ZeroPercentBuilder.BuildSources
                 PlayerSettings.SetScriptingBackend(namedTarget, editorScriptingImplementation);
                 PlayerSettings.productName = editorProductName;
                 PlayerSettings.SetManagedStrippingLevel(namedTarget, editorManagedStrippingLevel);
+                PlayerSettings.bundleVersion = editorVersion;
+                PlayerSettings.SetScriptingDefineSymbols(namedTarget, editorScriptDefines);
+                
+                PipelineBuildContext.ActiveBuildTarget = NamedBuildTarget.FromBuildTargetGroup
+                (
+                    BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget)
+                );
+                PipelineBuildContext.ActiveScriptingDefines = editorScriptDefines; 
             }
         }
     }
