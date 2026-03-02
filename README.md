@@ -14,7 +14,7 @@ The easiest way to install ZPI is to install it as a package.
 You can create a new build config using Build > BuildConfig. A build config defines settings for how to build the game.
 
 ## Creating a Pipeline
-You can create a new pipeline using Build > Pipeline. A pipeline is a series of steps to be executed one after another when the pipeline is ran. Currently, you can create a new, get a build from the disk, deploy a build to the disk, and upload to Steam.
+You can create a new pipeline using Build > Pipeline. A pipeline is a series of steps to be executed one after another when the pipeline is ran. Currently, you can create a new build, get a build from the disk, save a build to the disk, and upload to Steam.
 
 ## Options
 There is a new category under your user preferences.
